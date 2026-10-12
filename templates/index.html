@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>System Dashboard</h2>
+
+<div class="scan-section">
+    <h3>Start a New Scan</h3>
+    <input type="text" id="scan-path" placeholder="Enter folder path (e.g., /home/user/Documents)">
+    <button id="start-scan-btn">Start Scan</button>
+    <p id="scan-status"></p>
+</div>
+
+<div class="stats-section" id="stats-container" style="display: none;">
+    <h3>Storage Statistics</h3>
+    <p>Total Files: <span id="total-files">0</span></p>
+    <p>Total Size: <span id="total-size">0</span> bytes</p>
+    <p>Duplicate Waste: <span id="duplicate-waste">0</span> bytes</p>
+    
+    <h4>Category Breakdown</h4>
+    <ul id="category-list"></ul>
+</div>
+{% endblock %}

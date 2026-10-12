@@ -72,3 +72,10 @@ def update_scan_status(scan_id: int, status: str, total_scanned: int, error_log:
             WHERE id = ?
         """, (status, total_scanned, error_log, scan_id))
         conn.commit()
+
+def update_file_hash(file_id: int, sha256_hash: str, db_path: str = DB_FILE) -> None:
+    """Updates the SHA-256 hash for a specific file record."""
+    with get_connection(db_path) as conn:
+        cursor = conn.cursor()
+        cursor.execute("UPDATE files SET sha256 = ? WHERE id = ?", (sha256_hash, file_id))
+        conn.commit()
