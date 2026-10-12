@@ -1,1 +1,4 @@
-__pycache__/\n*.db\n*.log
+__pycache__/
+*.db
+*.log
+.python-version
