@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Review Duplicates</h2>
+<div class="scan-section">
+    <input type="number" id="dup-scan-id" placeholder="Enter Scan ID (e.g., 1)" style="width: 50%;">
+    <button id="load-duplicates-btn">Find Duplicates</button>
+</div>
+
+<div id="duplicates-container" class="stats-section" style="display: none;">
+    <!-- Duplicate groups injected via JS -->
+</div>
+{% endblock %}

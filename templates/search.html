@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Search Files</h2>
+<div class="scan-section">
+    <form id="search-form" style="display: flex; gap: 10px; margin-bottom: 1rem;">
+        <input type="text" id="search-keyword" placeholder="Filename or keyword">
+        <select id="search-category" style="padding: 0.5rem;">
+            <option value="">All Categories</option>
+            <option value="Documents">Documents</option>
+            <option value="Images">Images</option>
+            <option value="Video">Video</option>
+            <option value="Audio">Audio</option>
+            <option value="Code">Code</option>
+            <option value="Archives">Archives</option>
+            <option value="Others">Others</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<div class="stats-section">
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 1px solid #ccc;">
+                <th>Name</th>
+                <th>Category</th>
+                <th>Size (Bytes)</th>
+                <th>Path</th>
+            </tr>
+        </thead>
+        <tbody id="search-results-body">
+            <!-- Results injected via JS -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}
