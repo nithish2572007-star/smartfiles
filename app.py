@@ -1,7 +1,8 @@
 import os
 import threading
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from send2trash import send2trash
+
 
 # Import our custom modules
 from db import init_db, create_scan, get_connection
@@ -92,6 +93,21 @@ def delete_file():
         return jsonify({'message': f'Successfully moved {os.path.basename(path)} to recycle bin'})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/')
+def index():
+    """Serves the main dashboard page."""
+    return render_template('index.html')
+
+@app.route('/search')
+def search_page():
+    """Serves the search interface."""
+    return render_template('search.html')
+
+@app.route('/duplicates')
+def duplicates_page():
+    """Serves the duplicate review interface."""
+    return render_template('duplicates.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
