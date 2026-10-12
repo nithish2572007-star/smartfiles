@@ -6,7 +6,7 @@ from send2trash import send2trash
 
 # Import our custom modules
 from db import init_db, create_scan, get_connection
-from scanner import run_scan
+from scanner import run_scan, stop_scan_flag
 from search import search_files
 from duplicates import find_duplicates
 from stats import get_storage_stats
@@ -36,6 +36,13 @@ def start_scan():
     thread.start()
     
     return jsonify({'scan_id': scan_id, 'message': 'Scan started'})
+
+@app.route('/api/scan/terminate', methods=['POST'])
+def terminate_scan():
+    """Endpoint: POST /scan/terminate. Stops the currently running scan."""
+    import scanner
+    scanner.stop_scan_flag = True
+    return jsonify({'message': 'Termination signal sent to scanner'})
 
 @app.route('/api/scan/<int:scan_id>/status', methods=['GET'])
 def scan_status(scan_id):

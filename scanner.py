@@ -7,17 +7,28 @@ from categorizer import get_category
 logging.basicConfig(filename='scan_errors.log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 BATCH_SIZE = 500
 
+# Global flag to stop scanning
+stop_scan_flag = False
+
 def run_scan(root_path: str, scan_id: int, db_path: str = "smartfiles.db") -> Tuple[int, int]:
+    global stop_scan_flag
+    stop_scan_flag = False
     batch: List[Dict[str, Any]] = []
     total_scanned = 0
     error_count = 0
     dirs_to_scan = [root_path]
 
     while dirs_to_scan:
+        if stop_scan_flag:
+            update_scan_status(scan_id, 'cancelled', total_scanned, "Scan terminated by user.", db_path=db_path)
+            return total_scanned, error_count
+
         current_dir = dirs_to_scan.pop()
         try:
             with os.scandir(current_dir) as it:
                 for entry in it:
+                    if stop_scan_flag:
+                        break
                     if entry.is_symlink():
                         continue
                     if entry.is_dir():

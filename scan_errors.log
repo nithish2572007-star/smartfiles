@@ -1,0 +1,174 @@
+2026-10-13 00:29:08,101 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 00:29:08,101 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 00:29:46,845 - INFO - 127.0.0.1 - - [13/Oct/2026 00:29:46] "GET / HTTP/1.1" 200 -
+2026-10-13 00:29:46,853 - INFO - 127.0.0.1 - - [13/Oct/2026 00:29:46] "GET /static/js/app.js HTTP/1.1" 200 -
+2026-10-13 00:29:46,854 - INFO - 127.0.0.1 - - [13/Oct/2026 00:29:46] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-10-13 00:29:46,865 - INFO - 127.0.0.1 - - [13/Oct/2026 00:29:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-10-13 00:30:26,211 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:26] "POST /api/scan HTTP/1.1" 200 -
+2026-10-13 00:30:27,214 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:27] "GET /api/scan/1/status HTTP/1.1" 200 -
+2026-10-13 00:30:27,215 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:27] "GET /api/stats/1 HTTP/1.1" 200 -
+2026-10-13 00:30:45,972 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:45] "GET / HTTP/1.1" 200 -
+2026-10-13 00:30:45,976 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:45] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:30:45,978 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:45] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:30:47,005 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:47] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:30:47,008 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:47] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:30:47,009 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:47] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:30:49,988 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:49] "GET /duplicates HTTP/1.1" 200 -
+2026-10-13 00:30:49,992 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:49] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:30:49,993 - INFO - 127.0.0.1 - - [13/Oct/2026 00:30:49] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:31:01,684 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:01] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:31:01,688 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:01] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:31:01,688 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:01] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:31:02,268 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:02] "GET /duplicates HTTP/1.1" 200 -
+2026-10-13 00:31:02,271 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:02] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:31:02,272 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:02] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:31:02,716 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:02] "GET / HTTP/1.1" 200 -
+2026-10-13 00:31:02,720 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:02] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:31:02,720 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:02] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:31:06,348 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:06] "GET / HTTP/1.1" 200 -
+2026-10-13 00:31:06,352 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:06] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:31:06,353 - INFO - 127.0.0.1 - - [13/Oct/2026 00:31:06] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:47:34,104 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 00:47:34,104 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 00:47:34,107 - INFO -  * Restarting with stat
+2026-10-13 00:47:34,196 - WARNING -  * Debugger is active!
+2026-10-13 00:47:34,200 - INFO -  * Debugger PIN: 756-678-559
+2026-10-13 00:47:43,117 - INFO - 127.0.0.1 - - [13/Oct/2026 00:47:43] "GET / HTTP/1.1" 200 -
+2026-10-13 00:47:43,126 - INFO - 127.0.0.1 - - [13/Oct/2026 00:47:43] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:47:43,126 - INFO - 127.0.0.1 - - [13/Oct/2026 00:47:43] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:47:57,210 - INFO - 127.0.0.1 - - [13/Oct/2026 00:47:57] "[31m[1mPOST /api/scan HTTP/1.1[0m" 400 -
+2026-10-13 00:48:09,819 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:09] "[31m[1mPOST /api/scan HTTP/1.1[0m" 400 -
+2026-10-13 00:48:10,258 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:10] "[31m[1mPOST /api/scan HTTP/1.1[0m" 400 -
+2026-10-13 00:48:10,834 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:10] "[31m[1mPOST /api/scan HTTP/1.1[0m" 400 -
+2026-10-13 00:48:14,875 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:14] "POST /api/scan HTTP/1.1" 200 -
+2026-10-13 00:48:15,878 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:15] "GET /api/scan/2/status HTTP/1.1" 200 -
+2026-10-13 00:48:15,879 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:15] "GET /api/stats/2 HTTP/1.1" 200 -
+2026-10-13 00:48:48,535 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:48] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:48:48,539 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:48] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:48:48,539 - INFO - 127.0.0.1 - - [13/Oct/2026 00:48:48] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:49:01,301 - INFO - 127.0.0.1 - - [13/Oct/2026 00:49:01] "GET /api/search?keyword=packet HTTP/1.1" 200 -
+2026-10-13 00:49:16,404 - INFO - 127.0.0.1 - - [13/Oct/2026 00:49:16] "GET /api/search?keyword=packet&category=Documents HTTP/1.1" 200 -
+2026-10-13 00:52:42,265 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 00:52:42,265 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 00:52:42,265 - INFO -  * Restarting with stat
+2026-10-13 00:52:42,358 - WARNING -  * Debugger is active!
+2026-10-13 00:52:42,359 - INFO -  * Debugger PIN: 756-678-559
+2026-10-13 00:52:44,405 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:44] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:52:44,413 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:44] "GET /static/js/app.js HTTP/1.1" 200 -
+2026-10-13 00:52:44,414 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:44] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:52:47,867 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:47] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:52:47,871 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:47] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:52:47,872 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:47] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:52:51,130 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:51] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:52:51,135 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:51] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:52:51,136 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:51] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:52:53,627 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:53] "GET / HTTP/1.1" 200 -
+2026-10-13 00:52:53,631 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:53] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:52:53,631 - INFO - 127.0.0.1 - - [13/Oct/2026 00:52:53] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:17,403 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:17] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:53:17,407 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:17] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:17,407 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:17] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:19,795 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:19] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:53:19,799 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:19] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:19,799 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:19] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:29,379 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:29] "GET / HTTP/1.1" 200 -
+2026-10-13 00:53:29,382 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:29,383 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:29] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:41,250 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "GET / HTTP/1.1" 200 -
+2026-10-13 00:53:41,254 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:41,254 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:41,658 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "GET / HTTP/1.1" 200 -
+2026-10-13 00:53:41,662 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:41,662 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:41,818 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "GET / HTTP/1.1" 200 -
+2026-10-13 00:53:41,822 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:41,822 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:41] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:42,003 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:42] "GET / HTTP/1.1" 200 -
+2026-10-13 00:53:42,007 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:42] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:42,008 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:42] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:53:42,162 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:42] "GET / HTTP/1.1" 200 -
+2026-10-13 00:53:42,167 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:42] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:53:42,167 - INFO - 127.0.0.1 - - [13/Oct/2026 00:53:42] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:54:17,196 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:17] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:54:17,201 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:17] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:54:17,202 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:17] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:54:17,805 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:17] "GET /duplicates HTTP/1.1" 200 -
+2026-10-13 00:54:17,809 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:17] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:54:17,810 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:17] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:54:20,612 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:20] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:54:20,616 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:20] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:54:20,617 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:20] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:54:23,180 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:23] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:54:23,185 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:23] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:54:23,186 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:23] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:54:23,580 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:23] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:54:23,584 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:23] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:54:23,585 - INFO - 127.0.0.1 - - [13/Oct/2026 00:54:23] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:55:23,027 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 00:55:23,027 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 00:55:23,027 - INFO -  * Restarting with stat
+2026-10-13 00:55:23,120 - WARNING -  * Debugger is active!
+2026-10-13 00:55:23,121 - INFO -  * Debugger PIN: 756-678-559
+2026-10-13 00:55:28,492 - INFO - 127.0.0.1 - - [13/Oct/2026 00:55:28] "GET / HTTP/1.1" 200 -
+2026-10-13 00:55:28,500 - INFO - 127.0.0.1 - - [13/Oct/2026 00:55:28] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:55:28,500 - INFO - 127.0.0.1 - - [13/Oct/2026 00:55:28] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:58:26,120 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 00:58:26,120 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 00:58:26,120 - INFO -  * Restarting with stat
+2026-10-13 00:58:26,216 - WARNING -  * Debugger is active!
+2026-10-13 00:58:26,217 - INFO -  * Debugger PIN: 756-678-559
+2026-10-13 00:58:29,274 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:29] "GET / HTTP/1.1" 200 -
+2026-10-13 00:58:29,282 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:58:29,282 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:29] "GET /static/js/app.js HTTP/1.1" 200 -
+2026-10-13 00:58:33,746 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:33] "POST /api/scan HTTP/1.1" 200 -
+2026-10-13 00:58:34,749 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:34] "GET /api/scan/3/status HTTP/1.1" 200 -
+2026-10-13 00:58:34,750 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:34] "GET /api/stats/3 HTTP/1.1" 200 -
+2026-10-13 00:58:45,385 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:45] "GET /search HTTP/1.1" 200 -
+2026-10-13 00:58:45,389 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:45] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:58:45,390 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:45] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:58:47,727 - INFO - 127.0.0.1 - - [13/Oct/2026 00:58:47] "GET /api/search HTTP/1.1" 200 -
+2026-10-13 00:59:24,642 - INFO - 127.0.0.1 - - [13/Oct/2026 00:59:24] "GET /duplicates HTTP/1.1" 200 -
+2026-10-13 00:59:24,646 - INFO - 127.0.0.1 - - [13/Oct/2026 00:59:24] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 00:59:24,647 - INFO - 127.0.0.1 - - [13/Oct/2026 00:59:24] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 00:59:29,727 - INFO - 127.0.0.1 - - [13/Oct/2026 00:59:29] "GET /api/duplicates/1 HTTP/1.1" 200 -
+2026-10-13 01:04:52,779 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 01:04:52,779 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 01:04:52,779 - INFO -  * Restarting with stat
+2026-10-13 01:04:52,869 - WARNING -  * Debugger is active!
+2026-10-13 01:04:52,870 - INFO -  * Debugger PIN: 756-678-559
+2026-10-13 01:04:59,008 - INFO - 127.0.0.1 - - [13/Oct/2026 01:04:59] "GET /duplicates HTTP/1.1" 200 -
+2026-10-13 01:04:59,015 - INFO - 127.0.0.1 - - [13/Oct/2026 01:04:59] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-10-13 01:04:59,016 - INFO - 127.0.0.1 - - [13/Oct/2026 01:04:59] "GET /static/js/app.js HTTP/1.1" 200 -
+2026-10-13 01:05:01,079 - INFO - 127.0.0.1 - - [13/Oct/2026 01:05:01] "GET / HTTP/1.1" 200 -
+2026-10-13 01:05:01,083 - INFO - 127.0.0.1 - - [13/Oct/2026 01:05:01] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 01:05:01,083 - INFO - 127.0.0.1 - - [13/Oct/2026 01:05:01] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 01:05:01,895 - INFO - 127.0.0.1 - - [13/Oct/2026 01:05:01] "GET /search HTTP/1.1" 200 -
+2026-10-13 01:05:01,899 - INFO - 127.0.0.1 - - [13/Oct/2026 01:05:01] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-10-13 01:05:01,900 - INFO - 127.0.0.1 - - [13/Oct/2026 01:05:01] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 01:05:02,964 - INFO - 127.0.0.1 - - [13/Oct/2026 01:05:02] "GET /api/search HTTP/1.1" 200 -
+2026-10-13 01:06:07,941 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 01:06:07,941 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 01:06:07,941 - INFO -  * Restarting with stat
+2026-10-13 01:06:08,031 - WARNING -  * Debugger is active!
+2026-10-13 01:06:08,032 - INFO -  * Debugger PIN: 756-678-559
+2026-10-13 01:06:09,793 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:09] "GET /search HTTP/1.1" 200 -
+2026-10-13 01:06:09,801 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:09] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-10-13 01:06:09,803 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:09] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2026-10-13 01:06:11,349 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:11] "GET /api/search HTTP/1.1" 200 -
+2026-10-13 01:06:50,748 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-10-13 01:06:50,748 - INFO - [33mPress CTRL+C to quit[0m
+2026-10-13 01:06:50,748 - INFO -  * Restarting with stat
+2026-10-13 01:06:50,842 - WARNING -  * Debugger is active!
+2026-10-13 01:06:50,843 - INFO -  * Debugger PIN: 756-678-559
+2026-10-13 01:06:53,378 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:53] "GET /search HTTP/1.1" 200 -
+2026-10-13 01:06:53,386 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:53] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-10-13 01:06:53,386 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:53] "GET /static/js/app.js HTTP/1.1" 200 -
+2026-10-13 01:06:54,366 - INFO - 127.0.0.1 - - [13/Oct/2026 01:06:54] "GET /api/search HTTP/1.1" 200 -
