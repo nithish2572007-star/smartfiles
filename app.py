@@ -14,6 +14,9 @@ from stats import get_storage_stats
 app = Flask(__name__)
 
 # Ensure the database is initialized when the app starts
+import os
+if os.path.exists('smartfiles.db'):
+    os.remove('smartfiles.db')
 init_db()
 
 def scan_background(path: str, scan_id: int):

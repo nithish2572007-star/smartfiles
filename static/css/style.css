@@ -59,3 +59,51 @@ button {
 button:hover {
     background-color: #2980b9;
 }
+
+/* Table Layout Fixes */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    table-layout: fixed;
+}
+
+th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: top;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Handle long file names and paths gracefully */
+td {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Search Form Padding Fixes */
+#search-form {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+#search-form input[type="text"],
+#search-form select {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-grow: 1;
+}
+
+#search-form button {
+    padding: 0.6rem 1.5rem;
+    white-space: nowrap;
+}
