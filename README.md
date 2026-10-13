@@ -9,6 +9,7 @@ A local Flask web application that scans directories, sorts files by type, searc
 * **Duplicate Detection:** Identifies exact duplicates by grouping by size and confirming with block-based SHA-256 hashing.
 * **Advisory Cleanup:** Safely moves selected duplicates to the system recycle bin using `send2trash`.
 * **Scan Management:** Ability to terminate active scans in real-time via the dashboard.
+* **Auto-Shutdown:** Automatically shuts down the server after a period of inactivity to save resources.
 
 ## Setup & Installation
 
