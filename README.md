@@ -11,33 +11,69 @@ A local Flask web application that scans directories, sorts files by type, searc
 * **Scan Management:** Ability to terminate active scans in real-time via the dashboard.
 * **Auto-Shutdown:** Automatically shuts down the server after a period of inactivity to save resources.
 
+## Prerequisites
+Python 3.12 or higher must be installed on your system. Download it from [python.org](https://www.python.org/downloads/).
+
 ## Setup & Installation
 
+You can install this project using `uv` (recommended) or standard `pip`.
+
+### Option 1: Using uv (Recommended)
 This project uses `uv` for lightning-fast dependency management.
 
+1. **Install uv:**
+   - **macOS/Linux:**
+     ```bash
+     curl -LsSf https://astral.sh/uv/install.sh | sh
+     ```
+   - **Windows:**
+     ```powershell
+     powershell -ExecutionPolicy ByPass -Command "irm https://astral.sh/uv/install.ps1 | iex"
+     ```
+
+2. **Clone the repository:**
+   ```bash
+   git clone https://github.com/nithish2572007-star/smartfiles.git
+   cd smartfiles
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   uv sync
+   ```
+
+4. **Run the application:**
+   ```bash
+   uv run python app.py
+   ```
+
+### Option 2: Using pip
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/nithish2572007-star/smartfiles.git
    cd smartfiles
    ```
 
-2. **Install dependencies:**
+2. **Create a virtual environment:**
    ```bash
-   uv sync
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. **Run the application:**
+3. **Install dependencies:**
    ```bash
-   uv run python app.py
-   ```
-   *Alternatively, using Flask CLI:*
-   ```bash
-   uv run flask run
+   pip install -r requirements.txt
    ```
 
-4. **Access the Dashboard:**
-   Open your browser and navigate to `http://127.0.0.1:5000`
+4. **Run the application:**
+   ```bash
+   python app.py
+   ```
 
+## Access the Dashboard
+Open your browser and navigate to `http://127.0.0.1:5000`
+
+## Project Structure
 ## Project Structure
 - `app.py`: Flask application entry point and API routes.
 - `scanner.py`: Directory traversal and file scanning logic.
