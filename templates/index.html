@@ -5,19 +5,53 @@
 
 <div class="scan-section">
     <h3>Start a New Scan</h3>
-    <input type="text" id="scan-path" placeholder="Enter folder path (e.g., /home/user/Documents)">
-    <button id="start-scan-btn">Start Scan</button>
-    <button id="terminate-scan-btn" style="display: none; background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 3px; margin-left: 10px;">Terminate Scan</button>
-    <p id="scan-status"></p>
+    <p style="font-size: 0.9em; color: #666; margin-bottom: 0.5rem;">Enter one or more folder paths (comma-separated):</p>
+    <div style="display: flex; gap: 8px;">
+        <input type="text" id="scan-path" placeholder="e.g. /home/user/Documents, /home/user/Downloads" style="flex: 1;">
+        <button id="start-scan-btn">Start Scan</button>
+        <button id="terminate-scan-btn" style="display: none; background: #e74c3c; color: white; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 3px;">Terminate Scan</button>
+    </div>
+    <p id="scan-status" style="margin-top: 0.8rem; font-weight: 500;"></p>
+    
+    <div id="skipped-section" style="display: none; margin-top: 1rem; padding: 0.8rem; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 4px; color: #856404;">
+        <h4 style="margin-top: 0; margin-bottom: 0.4rem;">Ignored / Skipped Items</h4>
+        <ul id="skipped-list" style="margin-bottom: 0; padding-left: 1.2rem; font-size: 0.85em; max-height: 150px; overflow-y: auto;"></ul>
+    </div>
 </div>
 
 <div class="stats-section" id="stats-container" style="display: none;">
     <h3>Storage Statistics</h3>
-    <p>Total Files: <span id="total-files">0</span></p>
-    <p>Total Size: <span id="total-size">0</span> bytes</p>
-    <p>Duplicate Waste: <span id="duplicate-waste">0</span> bytes</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 1.5rem;">
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; border-left: 4px solid #3498db;">
+            <div style="font-size: 0.85em; color: #666;">Total Files</div>
+            <div style="font-size: 1.4em; font-weight: bold;" id="total-files">0</div>
+        </div>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; border-left: 4px solid #2ecc71;">
+            <div style="font-size: 0.85em; color: #666;">Total Size</div>
+            <div style="font-size: 1.4em; font-weight: bold;" id="total-size">0</div>
+        </div>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; border-left: 4px solid #e74c3c;">
+            <div style="font-size: 0.85em; color: #666;">Duplicate Waste</div>
+            <div style="font-size: 1.4em; font-weight: bold;" id="duplicate-waste">0</div>
+        </div>
+    </div>
     
     <h4>Category Breakdown</h4>
-    <ul id="category-list"></ul>
+    <ul id="category-list" style="margin-bottom: 2rem;"></ul>
+
+    <h4>Largest Files</h4>
+    <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr style="border-bottom: 2px solid #ccc; background-color: #f8f9fa;">
+                <th style="width: 30%;">Name</th>
+                <th style="width: 15%;">Category</th>
+                <th style="width: 15%;">Size</th>
+                <th style="width: 40%;">Path</th>
+            </tr>
+        </thead>
+        <tbody id="largest-files-body">
+            <!-- Largest files injected via JS -->
+        </tbody>
+    </table>
 </div>
 {% endblock %}

@@ -17,17 +17,37 @@ def hash_file(file_path: str, block_size: int = 65536) -> str:
     except (OSError, PermissionError):
         return None
 
+def are_files_identical(file1: str, file2: str, block_size: int = 65536) -> bool:
+    """
+    Compares two files byte by byte to guarantee identical content (Section III-C).
+    Returns False if files differ or cannot be read.
+    """
+    try:
+        with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
+            while True:
+                b1 = f1.read(block_size)
+                b2 = f2.read(block_size)
+                if b1 != b2:
+                    return False
+                if not b1:
+                    return True
+    except (OSError, PermissionError):
+        return False
+
 def find_duplicates(scan_id: int, db_path: str = "smartfiles.db") -> List[Dict[str, Any]]:
     """
-    Finds exact file duplicates by first grouping by size, then confirming with SHA-256 hashes[cite: 2].
-    Calculates wasted storage space per duplicate group[cite: 2].
+    Finds exact file duplicates by:
+    1. Grouping non-empty files by size (size > 0).
+    2. Computing/verifying SHA-256 hashes for candidates.
+    3. Verifying identical hash candidates byte by byte (Section III-C).
+    4. Calculating wasted storage space per duplicate group: (n - 1) * s.
     """
     duplicate_groups = []
     
     with get_connection(db_path) as conn:
         cursor = conn.cursor()
         
-        # 1 & 2. Exclude zero-byte files, group by size, and find sizes with > 1 file[cite: 2]
+        # 1 & 2. Exclude zero-byte files, group by size, and find sizes with > 1 file
         cursor.execute("""
             SELECT size FROM files 
             WHERE scan_id = ? AND size > 0 
@@ -46,13 +66,13 @@ def find_duplicates(scan_id: int, db_path: str = "smartfiles.db") -> List[Dict[s
             candidates = cursor.fetchall()
             hash_buckets = defaultdict(list)
             
-            # 3 & 4. Hash the candidates and group by hash[cite: 2]
+            # 3 & 4. Hash the candidates and group by hash
             for file_record in candidates:
                 file_id = file_record["id"]
                 path = file_record["path"]
                 stored_hash = file_record["sha256"]
                 
-                # 6. Skip hashing if previously stored and unchanged
+                # Skip hashing if previously stored and unchanged
                 current_hash = stored_hash
                 if not current_hash:
                     current_hash = hash_file(path)
@@ -62,16 +82,31 @@ def find_duplicates(scan_id: int, db_path: str = "smartfiles.db") -> List[Dict[s
                 if current_hash:
                     hash_buckets[current_hash].append(dict(file_record))
             
-            # 5. Compute wasted space per group as (n-1) * s[cite: 2]
+            # 5. Section III-C: Check files with identical hashes byte-by-byte
             for file_hash, group in hash_buckets.items():
                 if len(group) > 1:
-                    wasted_space = (len(group) - 1) * size
-                    duplicate_groups.append({
-                        "hash": file_hash,
-                        "size": size,
-                        "count": len(group),
-                        "wasted_space": wasted_space,
-                        "files": group
-                    })
+                    # Partition group into byte-verified clusters
+                    verified_clusters: List[List[Dict[str, Any]]] = []
+                    for file_record in group:
+                        matched = False
+                        for cluster in verified_clusters:
+                            # Compare against the representative of this cluster
+                            if are_files_identical(file_record["path"], cluster[0]["path"]):
+                                cluster.append(file_record)
+                                matched = True
+                                break
+                        if not matched:
+                            verified_clusters.append([file_record])
+                    
+                    for cluster in verified_clusters:
+                        if len(cluster) > 1:
+                            wasted_space = (len(cluster) - 1) * size
+                            duplicate_groups.append({
+                                "hash": file_hash,
+                                "size": size,
+                                "count": len(cluster),
+                                "wasted_space": wasted_space,
+                                "files": cluster
+                            })
                     
     return duplicate_groups

@@ -1,6 +1,7 @@
 import os
+import json
 import logging
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Union, Optional
 from db import insert_files_batch, update_scan_status
 from categorizer import get_category
 
@@ -10,18 +11,71 @@ BATCH_SIZE = 500
 # Global flag to stop scanning
 stop_scan_flag = False
 
-def run_scan(root_path: str, scan_id: int, db_path: str = "smartfiles.db") -> Tuple[int, int]:
+# Known system folders and pseudo-filesystems across Linux, macOS, and Windows
+SYSTEM_BASENAMES = {
+    'proc', 'sys', 'dev', 'run', 'var/run', 'var/lock',
+    'windows', 'pagefile.sys', 'hiberfil.sys',
+    'system volume information', '$recycle.bin', '.trash', '.trashes'
+}
+SYSTEM_EXACT_PATHS = {
+    '/proc', '/sys', '/dev', '/run', '/var/run', '/var/lock',
+    'c:\\windows', 'c:\\pagefile.sys', 'c:\\hiberfil.sys'
+}
+
+def is_system_directory(path: str) -> bool:
+    """Checks whether the directory is a known system directory or virtual filesystem."""
+    normalized = os.path.abspath(path).lower()
+    base = os.path.basename(normalized)
+    if base in SYSTEM_BASENAMES or normalized in SYSTEM_EXACT_PATHS:
+        return True
+    for prefix in ('/proc', '/sys', '/dev', '/run'):
+        if normalized == prefix or normalized.startswith(prefix + '/'):
+            return True
+    return False
+
+def run_scan(
+    root_paths: Union[str, List[str]], 
+    scan_id: int, 
+    db_path: str = "smartfiles.db"
+) -> Tuple[int, int, List[Dict[str, str]]]:
+    """
+    Scans one or more directories, ignoring and reporting system folders and unreadable files.
+    Returns (total_scanned, error_count, skipped_items).
+    """
     global stop_scan_flag
     stop_scan_flag = False
     batch: List[Dict[str, Any]] = []
     total_scanned = 0
     error_count = 0
-    dirs_to_scan = [root_path]
+    skipped_items: List[Dict[str, str]] = []
+
+    if isinstance(root_paths, str):
+        dirs_to_scan = [p.strip() for p in root_paths.split(',') if p.strip()]
+    else:
+        dirs_to_scan = list(root_paths)
+
+    # Initial validation of provided directories
+    active_dirs = []
+    for d in dirs_to_scan:
+        abs_d = os.path.abspath(d)
+        if is_system_directory(abs_d):
+            skipped_items.append({"path": abs_d, "reason": "System folder ignored"})
+            continue
+        if not os.path.isdir(abs_d):
+            skipped_items.append({"path": abs_d, "reason": "Directory does not exist or inaccessible"})
+            continue
+        active_dirs.append(abs_d)
+
+    dirs_to_scan = active_dirs
 
     while dirs_to_scan:
         if stop_scan_flag:
-            update_scan_status(scan_id, 'cancelled', total_scanned, "Scan terminated by user.", db_path=db_path)
-            return total_scanned, error_count
+            skipped_json = json.dumps(skipped_items) if skipped_items else None
+            update_scan_status(
+                scan_id, 'cancelled', total_scanned, 
+                "Scan terminated by user.", skipped_items=skipped_json, db_path=db_path
+            )
+            return total_scanned, error_count, skipped_items
 
         current_dir = dirs_to_scan.pop()
         try:
@@ -32,6 +86,9 @@ def run_scan(root_path: str, scan_id: int, db_path: str = "smartfiles.db") -> Tu
                     if entry.is_symlink():
                         continue
                     if entry.is_dir():
+                        if is_system_directory(entry.path):
+                            skipped_items.append({"path": entry.path, "reason": "System folder ignored"})
+                            continue
                         dirs_to_scan.append(entry.path)
                     elif entry.is_file():
                         try:
@@ -50,14 +107,17 @@ def run_scan(root_path: str, scan_id: int, db_path: str = "smartfiles.db") -> Tu
                                 batch.clear()
                         except (OSError, PermissionError) as e:
                             error_count += 1
+                            skipped_items.append({"path": entry.path, "reason": f"Unreadable file: {str(e)}"})
                             logging.error(f"File read error at {entry.path}: {e}")
         except (OSError, PermissionError) as e:
             error_count += 1
+            skipped_items.append({"path": current_dir, "reason": f"Inaccessible directory: {str(e)}"})
             logging.error(f"Directory access error at {current_dir}: {e}")
 
     if batch:
         insert_files_batch(batch, db_path=db_path)
         
     error_log_summary = f"Encountered {error_count} errors." if error_count > 0 else None
-    update_scan_status(scan_id, 'completed', total_scanned, error_log_summary, db_path=db_path)
-    return total_scanned, error_count
+    skipped_json = json.dumps(skipped_items) if skipped_items else None
+    update_scan_status(scan_id, 'completed', total_scanned, error_log_summary, skipped_items=skipped_json, db_path=db_path)
+    return total_scanned, error_count, skipped_items

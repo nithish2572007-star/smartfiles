@@ -3,19 +3,39 @@
 {% block content %}
 <h2>Search Files</h2>
 <div class="scan-section">
-    <form id="search-form" style="display: flex; gap: 10px; margin-bottom: 1rem;">
-        <input type="text" id="search-keyword" placeholder="Filename or keyword">
-        <select id="search-category" style="padding: 0.5rem;">
-            <option value="">All Categories</option>
-            <option value="Documents">Documents</option>
-            <option value="Images">Images</option>
-            <option value="Video">Video</option>
-            <option value="Audio">Audio</option>
-            <option value="Code">Code</option>
-            <option value="Archives">Archives</option>
-            <option value="Others">Others</option>
-        </select>
-        <button type="submit">Search</button>
+    <form id="search-form" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="search-keyword" placeholder="Filename or keyword" style="flex: 2; min-width: 200px;">
+            <select id="search-category" style="padding: 0.5rem; flex: 1; min-width: 140px;">
+                <option value="">All Categories</option>
+                <option value="Documents">Documents</option>
+                <option value="Images">Images</option>
+                <option value="Video">Video</option>
+                <option value="Audio">Audio</option>
+                <option value="Code">Code</option>
+                <option value="Archives">Archives</option>
+                <option value="Others">Others</option>
+            </select>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 0.9em;">
+            <label style="display: flex; align-items: center; gap: 5px;">
+                Min Size (KB):
+                <input type="number" id="search-min-size" placeholder="0" min="0" style="width: 90px; padding: 0.4rem;">
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                Max Size (KB):
+                <input type="number" id="search-max-size" placeholder="No max" min="0" style="width: 90px; padding: 0.4rem;">
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                From:
+                <input type="date" id="search-start-date" style="padding: 0.4rem;">
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px;">
+                To:
+                <input type="date" id="search-end-date" style="padding: 0.4rem;">
+            </label>
+            <button type="submit" style="margin-left: auto;">Search</button>
+        </div>
     </form>
 </div>
 
@@ -23,10 +43,11 @@
     <table style="width: 100%; text-align: left; border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #ccc;">
-                <th>Name</th>
-                <th>Category</th>
-                <th>Size (Bytes)</th>
-                <th>Path</th>
+                <th style="width: 25%;">Name</th>
+                <th style="width: 12%;">Category</th>
+                <th style="width: 13%;">Size</th>
+                <th style="width: 32%;">Path</th>
+                <th style="width: 18%;">Actions</th>
             </tr>
         </thead>
         <tbody id="search-results-body">
