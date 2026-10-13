@@ -17,10 +17,53 @@ app = Flask(__name__)
 init_db()
 
 import shutil
+import time
+import signal
+
+# Inactivity timeout configuration (default: 5 minutes / 300 seconds)
+INACTIVITY_TIMEOUT_SECONDS = int(os.environ.get("INACTIVITY_TIMEOUT_SECONDS", 300))
+last_activity_time = time.time()
+active_scans_lock = threading.Lock()
+active_scans_count = 0
+
+@app.before_request
+def update_activity():
+    """Updates the last activity timestamp on user requests, excluding passive status polls if no scan is active."""
+    global last_activity_time
+    last_activity_time = time.time()
+
+def inactivity_watcher():
+    """Monitors inactivity and shuts down the process after INACTIVITY_TIMEOUT_SECONDS of idle time."""
+    while True:
+        time.sleep(5)
+        with active_scans_lock:
+            scanning = (active_scans_count > 0)
+        
+        idle_duration = time.time() - last_activity_time
+        if idle_duration >= INACTIVITY_TIMEOUT_SECONDS and not scanning:
+            print(f"\n[SmartFiles] Inactive for {INACTIVITY_TIMEOUT_SECONDS}s ({INACTIVITY_TIMEOUT_SECONDS // 60} min). Auto-shutting down...")
+            # Trigger clean shutdown
+            try:
+                os.kill(os.getpid(), signal.SIGINT)
+            except Exception:
+                os._exit(0)
+            break
+
+# Start the background inactivity watcher as a daemon thread
+watcher_thread = threading.Thread(target=inactivity_watcher, daemon=True)
+watcher_thread.start()
 
 def scan_background(paths: list, scan_id: int):
-    """Runs the scan in a background thread to prevent UI freezing."""
-    run_scan(paths, scan_id)
+    """Runs the scan in a background thread and tracks active scan count."""
+    global active_scans_count, last_activity_time
+    with active_scans_lock:
+        active_scans_count += 1
+    try:
+        run_scan(paths, scan_id)
+    finally:
+        with active_scans_lock:
+            active_scans_count = max(0, active_scans_count - 1)
+        last_activity_time = time.time()
 
 @app.route('/api/scan', methods=['POST'])
 def start_scan():
