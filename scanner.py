@@ -60,6 +60,7 @@ def run_scan(
     total_scanned = 0
     error_count = 0
     skipped_items: List[Dict[str, str]] = []
+    MAX_SKIPPED_TRACKED = 1000  # Prevent RAM exhaustion
 
     if isinstance(root_paths, str):
         dirs_to_scan = [p.strip() for p in root_paths.split(',') if p.strip()]
@@ -71,10 +72,12 @@ def run_scan(
     for d in dirs_to_scan:
         abs_d = os.path.abspath(d)
         if is_system_directory(abs_d):
-            skipped_items.append({"path": abs_d, "reason": "System folder ignored"})
+            if len(skipped_items) < MAX_SKIPPED_TRACKED:
+                skipped_items.append({"path": abs_d, "reason": "System folder ignored"})
             continue
         if not os.path.isdir(abs_d):
-            skipped_items.append({"path": abs_d, "reason": "Directory does not exist or inaccessible"})
+            if len(skipped_items) < MAX_SKIPPED_TRACKED:
+                skipped_items.append({"path": abs_d, "reason": "Directory does not exist or inaccessible"})
             continue
         active_dirs.append(abs_d)
 
@@ -95,7 +98,8 @@ def run_scan(
                             continue
                         if entry.is_dir():
                             if is_system_directory(entry.path):
-                                skipped_items.append({"path": entry.path, "reason": "System folder ignored"})
+                                if len(skipped_items) < MAX_SKIPPED_TRACKED:
+                                    skipped_items.append({"path": entry.path, "reason": "System folder ignored"})
                                 continue
                             dirs_to_scan.append(entry.path)
                         elif entry.is_file():
@@ -115,11 +119,13 @@ def run_scan(
                                     batch.clear()
                             except (OSError, PermissionError) as e:
                                 error_count += 1
-                                skipped_items.append({"path": entry.path, "reason": f"Unreadable file: {str(e)}"})
+                                if len(skipped_items) < MAX_SKIPPED_TRACKED:
+                                    skipped_items.append({"path": entry.path, "reason": f"Unreadable file: {str(e)}"})
                                 logger.error(f"File read error at {entry.path}: {e}")
             except (OSError, PermissionError) as e:
                 error_count += 1
-                skipped_items.append({"path": current_dir, "reason": f"Inaccessible directory: {str(e)}"})
+                if len(skipped_items) < MAX_SKIPPED_TRACKED:
+                    skipped_items.append({"path": current_dir, "reason": f"Inaccessible directory: {str(e)}"})
                 logger.error(f"Directory access error at {current_dir}: {e}")
 
         if stop_scan_flag:
