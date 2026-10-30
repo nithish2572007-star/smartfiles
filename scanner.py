@@ -5,8 +5,20 @@ from typing import List, Dict, Any, Tuple, Union, Optional
 from db import insert_files_batch, update_scan_status
 from categorizer import get_category
 
-logging.basicConfig(filename='scan_errors.log', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
-BATCH_SIZE = 500
+logger = logging.getLogger("smartfiles.scanner")
+if not logger.handlers:
+    _stream_h = logging.StreamHandler()
+    _stream_h.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    logger.addHandler(_stream_h)
+    try:
+        _file_h = logging.FileHandler('scan_errors.log', encoding='utf-8')
+        _file_h.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        logger.addHandler(_file_h)
+    except (OSError, PermissionError):
+        pass
+    logger.setLevel(logging.ERROR)
+
+BATCH_SIZE = 1000
 
 # Global flag to stop scanning
 stop_scan_flag = False
@@ -68,8 +80,55 @@ def run_scan(
 
     dirs_to_scan = active_dirs
 
-    while dirs_to_scan:
+    try:
+        while dirs_to_scan:
+            if stop_scan_flag:
+                break
+
+            current_dir = dirs_to_scan.pop()
+            try:
+                with os.scandir(current_dir) as it:
+                    for entry in it:
+                        if stop_scan_flag:
+                            break
+                        if entry.is_symlink():
+                            continue
+                        if entry.is_dir():
+                            if is_system_directory(entry.path):
+                                skipped_items.append({"path": entry.path, "reason": "System folder ignored"})
+                                continue
+                            dirs_to_scan.append(entry.path)
+                        elif entry.is_file():
+                            try:
+                                stat = entry.stat()
+                                name = entry.name
+                                ext = os.path.splitext(name)[1].lower()
+                                
+                                batch.append({
+                                    "scan_id": scan_id, "path": entry.path, "name": name, "ext": ext,
+                                    "category": get_category(ext), "size": stat.st_size, "mtime": stat.st_mtime, "sha256": None
+                                })
+                                total_scanned += 1
+                                
+                                if len(batch) >= BATCH_SIZE:
+                                    insert_files_batch(batch, db_path=db_path)
+                                    batch.clear()
+                            except (OSError, PermissionError) as e:
+                                error_count += 1
+                                skipped_items.append({"path": entry.path, "reason": f"Unreadable file: {str(e)}"})
+                                logger.error(f"File read error at {entry.path}: {e}")
+            except (OSError, PermissionError) as e:
+                error_count += 1
+                skipped_items.append({"path": current_dir, "reason": f"Inaccessible directory: {str(e)}"})
+                logger.error(f"Directory access error at {current_dir}: {e}")
+
         if stop_scan_flag:
+            if batch:
+                try:
+                    insert_files_batch(batch, db_path=db_path)
+                    batch.clear()
+                except Exception as e:
+                    logger.error(f"Error flushing final batch on cancel: {e}")
             skipped_json = json.dumps(skipped_items) if skipped_items else None
             update_scan_status(
                 scan_id, 'cancelled', total_scanned, 
@@ -77,47 +136,25 @@ def run_scan(
             )
             return total_scanned, error_count, skipped_items
 
-        current_dir = dirs_to_scan.pop()
-        try:
-            with os.scandir(current_dir) as it:
-                for entry in it:
-                    if stop_scan_flag:
-                        break
-                    if entry.is_symlink():
-                        continue
-                    if entry.is_dir():
-                        if is_system_directory(entry.path):
-                            skipped_items.append({"path": entry.path, "reason": "System folder ignored"})
-                            continue
-                        dirs_to_scan.append(entry.path)
-                    elif entry.is_file():
-                        try:
-                            stat = entry.stat()
-                            name = entry.name
-                            ext = os.path.splitext(name)[1].lower()
-                            
-                            batch.append({
-                                "scan_id": scan_id, "path": entry.path, "name": name, "ext": ext,
-                                "category": get_category(ext), "size": stat.st_size, "mtime": stat.st_mtime, "sha256": None
-                            })
-                            total_scanned += 1
-                            
-                            if len(batch) >= BATCH_SIZE:
-                                insert_files_batch(batch, db_path=db_path)
-                                batch.clear()
-                        except (OSError, PermissionError) as e:
-                            error_count += 1
-                            skipped_items.append({"path": entry.path, "reason": f"Unreadable file: {str(e)}"})
-                            logging.error(f"File read error at {entry.path}: {e}")
-        except (OSError, PermissionError) as e:
-            error_count += 1
-            skipped_items.append({"path": current_dir, "reason": f"Inaccessible directory: {str(e)}"})
-            logging.error(f"Directory access error at {current_dir}: {e}")
-
-    if batch:
-        insert_files_batch(batch, db_path=db_path)
-        
-    error_log_summary = f"Encountered {error_count} errors." if error_count > 0 else None
-    skipped_json = json.dumps(skipped_items) if skipped_items else None
-    update_scan_status(scan_id, 'completed', total_scanned, error_log_summary, skipped_items=skipped_json, db_path=db_path)
-    return total_scanned, error_count, skipped_items
+        if batch:
+            insert_files_batch(batch, db_path=db_path)
+            batch.clear()
+            
+        error_log_summary = f"Encountered {error_count} errors." if error_count > 0 else None
+        skipped_json = json.dumps(skipped_items) if skipped_items else None
+        update_scan_status(scan_id, 'completed', total_scanned, error_log_summary, skipped_items=skipped_json, db_path=db_path)
+        return total_scanned, error_count, skipped_items
+    except Exception as exc:
+        logger.exception(f"Unhandled scan error in scan_id {scan_id}: {exc}")
+        if batch:
+            try:
+                insert_files_batch(batch, db_path=db_path)
+                batch.clear()
+            except Exception:
+                pass
+        skipped_json = json.dumps(skipped_items) if skipped_items else None
+        update_scan_status(
+            scan_id, 'failed', total_scanned,
+            f"Fatal error during scan: {str(exc)}", skipped_items=skipped_json, db_path=db_path
+        )
+        raise

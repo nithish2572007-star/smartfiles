@@ -1,11 +1,16 @@
 import os
+import time
+import signal
+import shutil
+import atexit
+import logging
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, request, jsonify, render_template
 from send2trash import send2trash
 
-
 # Import our custom modules
-from db import init_db, create_scan, get_connection
+from db import init_db, create_scan, get_connection, update_scan_status
 from scanner import run_scan, stop_scan_flag
 from search import search_files
 from duplicates import find_duplicates
@@ -16,15 +21,29 @@ app = Flask(__name__)
 # Ensure the database is initialized when the app starts
 init_db()
 
-import shutil
-import time
-import signal
+# Thread pool for managed scan execution
+MAX_SCAN_WORKERS = int(os.environ.get("MAX_SCAN_WORKERS", 4))
+scan_executor = ThreadPoolExecutor(max_workers=MAX_SCAN_WORKERS, thread_name_prefix="scan_worker")
 
 # Inactivity timeout configuration (default: 5 minutes / 300 seconds)
 INACTIVITY_TIMEOUT_SECONDS = int(os.environ.get("INACTIVITY_TIMEOUT_SECONDS", 300))
 last_activity_time = time.time()
-active_scans_lock = threading.Lock()
-active_scans_count = 0
+
+# Scan tracking state: queued vs running
+scans_lock = threading.Lock()
+queued_scans_count = 0
+running_scans_count = 0
+
+def cleanup_executor():
+    """Signals scanner to stop and cleanly shuts down the scan worker pool."""
+    import scanner
+    scanner.stop_scan_flag = True
+    try:
+        scan_executor.shutdown(wait=False, cancel_futures=True)
+    except Exception:
+        pass
+
+atexit.register(cleanup_executor)
 
 @app.before_request
 def update_activity():
@@ -36,13 +55,13 @@ def inactivity_watcher():
     """Monitors inactivity and shuts down the process after INACTIVITY_TIMEOUT_SECONDS of idle time."""
     while True:
         time.sleep(5)
-        with active_scans_lock:
-            scanning = (active_scans_count > 0)
+        with scans_lock:
+            busy = (queued_scans_count + running_scans_count) > 0
         
         idle_duration = time.time() - last_activity_time
-        if idle_duration >= INACTIVITY_TIMEOUT_SECONDS and not scanning:
+        if idle_duration >= INACTIVITY_TIMEOUT_SECONDS and not busy:
             print(f"\n[SmartFiles] Inactive for {INACTIVITY_TIMEOUT_SECONDS}s ({INACTIVITY_TIMEOUT_SECONDS // 60} min). Auto-shutting down...")
-            # Trigger clean shutdown
+            cleanup_executor()
             try:
                 os.kill(os.getpid(), signal.SIGINT)
             except Exception:
@@ -54,20 +73,34 @@ watcher_thread = threading.Thread(target=inactivity_watcher, daemon=True)
 watcher_thread.start()
 
 def scan_background(paths: list, scan_id: int):
-    """Runs the scan in a background thread and tracks active scan count."""
-    global active_scans_count, last_activity_time
-    with active_scans_lock:
-        active_scans_count += 1
+    """
+    Executes the scan within a managed ThreadPoolExecutor worker.
+    Tracks queued vs running scans and encloses execution in an error boundary.
+    """
+    global queued_scans_count, running_scans_count, last_activity_time
+    with scans_lock:
+        queued_scans_count = max(0, queued_scans_count - 1)
+        running_scans_count += 1
     try:
         run_scan(paths, scan_id)
+    except Exception as exc:
+        logging.exception(f"Unhandled scan failure for scan_id={scan_id}: {exc}")
+        try:
+            update_scan_status(
+                scan_id, 'failed', 0, 
+                error_log=f"Worker exception: {str(exc)}"
+            )
+        except Exception:
+            pass
     finally:
-        with active_scans_lock:
-            active_scans_count = max(0, active_scans_count - 1)
+        with scans_lock:
+            running_scans_count = max(0, running_scans_count - 1)
         last_activity_time = time.time()
 
 @app.route('/api/scan', methods=['POST'])
 def start_scan():
-    """Endpoint: POST /scan. Initializes a background scan for one or more folders."""
+    """Endpoint: POST /scan. Initializes and queues a background scan via ThreadPoolExecutor."""
+    global queued_scans_count
     data = request.get_json() or {}
     paths = data.get('paths')
     if not paths and data.get('path'):
@@ -84,11 +117,22 @@ def start_scan():
     root_path_str = ", ".join(cleaned_paths)
     scan_id = create_scan(root_path_str)
     
-    # Run scans in a background thread
-    thread = threading.Thread(target=scan_background, args=(cleaned_paths, scan_id))
-    thread.start()
+    with scans_lock:
+        queued_scans_count += 1
+        is_queued = running_scans_count >= MAX_SCAN_WORKERS
+        current_queued = queued_scans_count
+        current_running = running_scans_count
+
+    # Submit task to the bounded ThreadPoolExecutor
+    scan_executor.submit(scan_background, cleaned_paths, scan_id)
     
-    return jsonify({'scan_id': scan_id, 'message': 'Scan started'})
+    message = 'Scan queued' if is_queued else 'Scan started'
+    return jsonify({
+        'scan_id': scan_id, 
+        'message': message,
+        'queued_scans': current_queued,
+        'running_scans': current_running
+    })
 
 @app.route('/api/scan/terminate', methods=['POST'])
 def terminate_scan():

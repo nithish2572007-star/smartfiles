@@ -5,14 +5,17 @@ from typing import Any, Dict, List, Optional
 DB_FILE = os.environ.get("SMARTFILES_DB", "smartfiles.db")
 
 def get_connection(db_path: str = DB_FILE) -> sqlite3.Connection:
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(db_path, timeout=30.0)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA busy_timeout = 5000;")
     conn.execute("PRAGMA foreign_keys = ON;")
     return conn
 
 def init_db(db_path: str = DB_FILE) -> None:
     with get_connection(db_path) as conn:
         cursor = conn.cursor()
+        cursor.execute("PRAGMA journal_mode = WAL;")
+        cursor.execute("PRAGMA synchronous = NORMAL;")
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS scans (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
