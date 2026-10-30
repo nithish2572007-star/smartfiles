@@ -1,58 +1,92 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Search Files</h2>
-<div class="scan-section">
-    <form id="search-form" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 1rem;">
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <input type="text" id="search-keyword" placeholder="Filename or keyword" style="flex: 2; min-width: 200px;">
-            <select id="search-category" style="padding: 0.5rem; flex: 1; min-width: 140px;">
-                <option value="">All Categories</option>
-                <option value="Documents">Documents</option>
-                <option value="Images">Images</option>
-                <option value="Video">Video</option>
-                <option value="Audio">Audio</option>
-                <option value="Code">Code</option>
-                <option value="Archives">Archives</option>
-                <option value="Others">Others</option>
-            </select>
+<div class="page-header">
+    <div>
+        <h2>File Search &amp; Management</h2>
+        <p>Query files across indexed directories with real-time keyword, size, and date filters.</p>
+    </div>
+</div>
+
+<div class="card">
+    <form id="search-form" class="filter-bar">
+        <div class="filter-row">
+            <div style="flex: 2; min-width: 240px; position: relative;">
+                <input type="text" id="search-keyword" placeholder="Search by filename or keyword..." style="width: 100%;">
+            </div>
+            <div style="flex: 1; min-width: 160px;">
+                <select id="search-category" style="width: 100%;">
+                    <option value="">All Categories</option>
+                    <option value="Documents">Documents</option>
+                    <option value="Images">Images</option>
+                    <option value="Video">Video</option>
+                    <option value="Audio">Audio</option>
+                    <option value="Code">Code</option>
+                    <option value="Archives">Archives</option>
+                    <option value="Others">Others</option>
+                </select>
+            </div>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 0.9em;">
-            <label style="display: flex; align-items: center; gap: 5px;">
-                Min Size (KB):
-                <input type="number" id="search-min-size" placeholder="0" min="0" style="width: 90px; padding: 0.4rem;">
-            </label>
-            <label style="display: flex; align-items: center; gap: 5px;">
-                Max Size (KB):
-                <input type="number" id="search-max-size" placeholder="No max" min="0" style="width: 90px; padding: 0.4rem;">
-            </label>
-            <label style="display: flex; align-items: center; gap: 5px;">
-                From:
-                <input type="date" id="search-start-date" style="padding: 0.4rem;">
-            </label>
-            <label style="display: flex; align-items: center; gap: 5px;">
-                To:
-                <input type="date" id="search-end-date" style="padding: 0.4rem;">
-            </label>
-            <button type="submit" style="margin-left: auto;">Search</button>
+
+        <div class="filter-row" style="padding-top: 0.25rem;">
+            <div class="filter-group">
+                <label for="search-min-size">Min Size (KB):</label>
+                <input type="number" id="search-min-size" placeholder="0" min="0" style="width: 100px;">
+            </div>
+
+            <div class="filter-group">
+                <label for="search-max-size">Max Size (KB):</label>
+                <input type="number" id="search-max-size" placeholder="No limit" min="0" style="width: 100px;">
+            </div>
+
+            <div class="filter-group">
+                <label for="search-start-date">Modified From:</label>
+                <input type="date" id="search-start-date">
+            </div>
+
+            <div class="filter-group">
+                <label for="search-end-date">To:</label>
+                <input type="date" id="search-end-date">
+            </div>
+
+            <div style="margin-left: auto; display: flex; gap: 8px;">
+                <button type="button" id="search-reset-btn" class="btn btn-secondary">Reset</button>
+                <button type="submit" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    Search
+                </button>
+            </div>
         </div>
     </form>
 </div>
 
-<div class="stats-section">
-    <table style="width: 100%; text-align: left; border-collapse: collapse;">
-        <thead>
-            <tr style="border-bottom: 1px solid #ccc;">
-                <th style="width: 25%;">Name</th>
-                <th style="width: 12%;">Category</th>
-                <th style="width: 13%;">Size</th>
-                <th style="width: 32%;">Path</th>
-                <th style="width: 18%;">Actions</th>
-            </tr>
-        </thead>
-        <tbody id="search-results-body">
-            <!-- Results injected via JS -->
-        </tbody>
-    </table>
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 class="card-title" style="margin: 0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#2563eb"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+            Matching Files (<span id="results-count">0</span>)
+        </h3>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 25%;">File Name</th>
+                    <th style="width: 12%;">Category</th>
+                    <th style="width: 12%;">Size</th>
+                    <th style="width: 33%;">Path</th>
+                    <th style="width: 18%;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="search-results-body">
+                <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+                        Use the search filters above to query indexed files.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

@@ -1,13 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Review Duplicates</h2>
-<div class="scan-section">
-    <input type="number" id="dup-scan-id" placeholder="Enter Scan ID (e.g., 1)" style="width: 50%;">
-    <button id="load-duplicates-btn">Find Duplicates</button>
+<div class="page-header">
+    <div>
+        <h2>Duplicate Review &amp; Safe Cleanup</h2>
+        <p>Identify exact duplicates verified via SHA-256 hashing and byte-level comparison.</p>
+    </div>
 </div>
 
-<div id="duplicates-container" class="stats-section" style="display: none;">
-    <!-- Duplicate groups injected via JS -->
+<div class="card">
+    <h3 class="card-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#ef4444"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        Select Scan to Review
+    </h3>
+    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <select id="dup-scan-select" style="flex: 2; min-width: 260px;">
+            <option value="">Loading recent scans...</option>
+        </select>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">or ID:</span>
+            <input type="number" id="dup-scan-id" placeholder="Scan ID" min="1" style="width: 90px;">
+        </div>
+        <button id="load-duplicates-btn" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            Find Duplicates
+        </button>
+    </div>
+</div>
+
+<div id="duplicate-summary-banner" class="stat-card" style="display: none; margin-bottom: 1.5rem; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <div class="stat-icon-wrapper stat-icon-red">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"/></svg>
+        </div>
+        <div>
+            <div class="stat-label">Total Recoverable Duplicate Waste</div>
+            <div class="stat-value" id="dup-total-waste">0 B</div>
+        </div>
+    </div>
+    <div style="text-align: right;">
+        <span class="badge badge-Documents" id="dup-groups-count" style="font-size: 0.85rem; padding: 4px 10px;">0 Groups</span>
+    </div>
+</div>
+
+<div id="duplicates-container">
+    <!-- Duplicate group cards rendered here -->
 </div>
 {% endblock %}

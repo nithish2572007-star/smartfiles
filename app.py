@@ -141,6 +141,15 @@ def terminate_scan():
     scanner.stop_scan_flag = True
     return jsonify({'message': 'Termination signal sent to scanner'})
 
+@app.route('/api/scans', methods=['GET'])
+def list_scans():
+    """Endpoint: GET /api/scans. Retrieves recent scans for quick selection."""
+    with get_connection() as conn:
+        scans = conn.execute(
+            "SELECT id, root_path, started_at, completed_at, status, total_scanned FROM scans ORDER BY id DESC LIMIT 30"
+        ).fetchall()
+        return jsonify([dict(s) for s in scans])
+
 @app.route('/api/scan/<int:scan_id>/status', methods=['GET'])
 def scan_status(scan_id):
     """Poll for progress and retrieve status and skipped items."""
